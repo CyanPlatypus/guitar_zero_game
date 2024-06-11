@@ -4,14 +4,13 @@ class Note {
         this.isPressed = false;
     }
 
-    checkHit(hitTime) {
-        const curTime = hitTime - songStartTime;
-        const delta = 250;
-        const windowStart = this.time - delta;
-        const windowEnd = this.time + delta;
+    checkHit(curSongTime, accuracyDeltaMs) {
+
+        const windowStart = this.time - accuracyDeltaMs;
+        const windowEnd = this.time + accuracyDeltaMs;
         
         // Add check !note.isPressed
-        if (curTime >= windowStart && curTime <= windowEnd) {
+        if (curSongTime >= windowStart && curSongTime <= windowEnd) {
             this.isPressed = true;
             console.log("hit");
         }
