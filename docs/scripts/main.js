@@ -7,8 +7,6 @@ const accuracyDeltaMs = 100;
 var canvas;
 var context;
 
-var x = 50;
-var y = 0;
 var noteVelocity = 0;
 var songStartTime = 0;
 var currentSongTimeMs = 0;
@@ -28,7 +26,8 @@ function onLoad() {
 }
 
 function loadGame() {
-    note = new Note(2000);
+    const noteView = new NoteView(50, 0, 40);
+    note = new Note(2000, noteView);
 }
 
 function onKeyDown(event) {
@@ -65,21 +64,28 @@ function updateState() {
     const noteStartingPosition = crossLineY - noteVelocity * note.time;
 
     currentSongTimeMs = Date.now() - songStartTime;
-    y = noteVelocity * currentSongTimeMs + noteStartingPosition;
+    note.view.y = noteVelocity * currentSongTimeMs + noteStartingPosition;
 }
 
 function draw() {
     clearCanvas();
 
-    const noteColor = note.isPressed ? "green" : "red";
-    drawRectangle(x, y, 40, 50, noteColor);
     drawText(currentSongTimeMs);
     drawLine(0, crossLineY, 1000, crossLineY, "white");
-
+    drawNote(note);
     const windowStartLineY = crossLineY - accuracyDeltaMs * noteVelocity;
     const windowEndLineY = crossLineY + accuracyDeltaMs * noteVelocity;
     drawLine(0, windowStartLineY , 1000, windowStartLineY, "grey");
     drawLine(0, windowEndLineY, 1000, windowEndLineY, "grey");
+}
+
+function drawNote(note) {
+    drawX = note.view.x - note.view.radius / 2;
+    drawY = note.view.y - note.view.radius / 2;
+
+    const noteColor = note.isPressed ? "green" : "red";
+    drawRectangle(drawX, drawY, note.view.radius, note.view.radius, noteColor);
+    drawRectangle(note.view.x - 2, note.view.y - 2, 4, 4, "black"); // dot in the center!
 }
 
 function drawRectangle(x, y, h, w, color) {

@@ -1,7 +1,8 @@
 class Note {
-    constructor(time) {
+    constructor(time, view) {
         this.time = time;
         this.isPressed = false;
+        this.view = view;
     }
 
     checkHit(curSongTime, accuracyDeltaMs) {
