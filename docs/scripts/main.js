@@ -11,7 +11,7 @@ var noteVelocity = 0;
 var songStartTime = 0;
 var currentSongTimeMs = 0;
 
-var note;
+var song;
 
 function onLoad() {
     canvas = document.getElementById("canvas");
@@ -26,8 +26,11 @@ function onLoad() {
 }
 
 function loadGame() {
-    const noteView = new NoteView(50, 0, 40);
-    note = new Note(2000, noteView);
+    song = new Song([
+        new Note(2000, new NoteView(50, 0, 40)),
+        new Note(3000, new NoteView(50, 0, 40)),
+        new Note(5000, new NoteView(50, 0, 40))
+    ]);
 }
 
 function onKeyDown(event) {
@@ -40,7 +43,7 @@ function onKeyDown(event) {
 
     if (consumed) {
         const curSongTime = Date.now() - songStartTime;
-        note.checkHit(curSongTime, accuracyDeltaMs);
+        song.checkHit(curSongTime, accuracyDeltaMs);
     }
 
     // Consume the event so it doesn't get handled twice
@@ -61,10 +64,11 @@ function gameLoop() {
 }
 
 function updateState() {
-    const noteStartingPosition = crossLineY - noteVelocity * note.time;
-
-    currentSongTimeMs = Date.now() - songStartTime;
-    note.view.y = noteVelocity * currentSongTimeMs + noteStartingPosition;
+    for (const note of song.notes) {
+        const noteStartingPosition = crossLineY - noteVelocity * note.time;
+        currentSongTimeMs = Date.now() - songStartTime;
+        note.view.y = noteVelocity * currentSongTimeMs + noteStartingPosition;
+    }
 }
 
 function draw() {
@@ -72,11 +76,16 @@ function draw() {
 
     drawText(currentSongTimeMs);
     drawLine(0, crossLineY, 1000, crossLineY, "white");
-    drawNote(note);
-    const windowStartLineY = crossLineY - accuracyDeltaMs * noteVelocity;
-    const windowEndLineY = crossLineY + accuracyDeltaMs * noteVelocity;
-    drawLine(0, windowStartLineY , 1000, windowStartLineY, "grey");
-    drawLine(0, windowEndLineY, 1000, windowEndLineY, "grey");
+
+    drawSong(song);
+
+    drawDebug()
+}
+
+function drawSong(song) {
+    for (const note of song.notes){
+        drawNote(note);
+    }
 }
 
 function drawNote(note) {
@@ -108,6 +117,13 @@ function drawLine(x1, y1, x2, y2, color) {
 function drawText(text) {
     context.font = "20px serif";
     context.fillText(text, 10, 20);
+}
+
+function drawDebug() {
+    const windowStartLineY = crossLineY - accuracyDeltaMs * noteVelocity;
+    const windowEndLineY = crossLineY + accuracyDeltaMs * noteVelocity;
+    drawLine(0, windowStartLineY , 1000, windowStartLineY, "grey");
+    drawLine(0, windowEndLineY, 1000, windowEndLineY, "grey");
 }
 
 function clearCanvas() {
