@@ -13,6 +13,9 @@ var currentSongTimeMs = 0;
 
 var song;
 
+// debug
+var noteSnapshots = [];
+
 function onLoad() {
     canvas = document.getElementById("canvas");
     context = canvas.getContext("2d");
@@ -38,6 +41,8 @@ function onKeyDown(event) {
         // Do nothing if event already handled
         return; 
     }
+
+    makeSongSnapshot();
 
     const consumed = event.code === "KeyJ";
 
@@ -124,8 +129,20 @@ function drawDebug() {
     const windowEndLineY = crossLineY + accuracyDeltaMs * noteVelocity;
     drawLine(0, windowStartLineY , 1000, windowStartLineY, "grey");
     drawLine(0, windowEndLineY, 1000, windowEndLineY, "grey");
+
+    for (const ySnapshot of noteSnapshots) {
+        drawRectangle(98, ySnapshot - 2, 4, 4, "black");
+    }
 }
 
 function clearCanvas() {
     context.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function makeSongSnapshot() {
+    noteSnapshots = [];
+
+    for (const note of song.notes) {
+        noteSnapshots.push(note.view.y);
+    }
 }
