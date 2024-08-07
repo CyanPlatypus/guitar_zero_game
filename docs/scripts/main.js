@@ -8,13 +8,8 @@ var canvas;
 var context;
 
 var noteVelocity = 0;
-var songStartTime = 0;
-var currentSongTimeMs = 0;
 
 var song;
-
-// debug
-var noteSnapshots = [];
 
 function onLoad() {
     canvas = document.getElementById("canvas");
@@ -29,11 +24,18 @@ function onLoad() {
 }
 
 function loadGame() {
-    song = new Song([
+    song = new Song(
+    [
         new Note(2000, new NoteView(50, 0, 40)),
         new Note(3000, new NoteView(50, 0, 40)),
         new Note(5000, new NoteView(50, 0, 40))
-    ]);
+    ],
+    [
+        new Note(1000, new NoteView(100, 0, 40)),
+        new Note(2000, new NoteView(100, 0, 40)),
+        new Note(6000, new NoteView(100, 0, 40))
+    ]
+);
 }
 
 function onKeyDown(event) {
@@ -42,13 +44,12 @@ function onKeyDown(event) {
         return; 
     }
 
-    makeSongSnapshot();
+    const consumed = ["KeyJ","KeyK"].includes(event.code);
 
-    const consumed = event.code === "KeyJ";
-
-    if (consumed) {
-        const curSongTime = Date.now() - songStartTime;
-        song.checkHit(curSongTime, accuracyDeltaMs);
+    if (event.code === "KeyJ") {
+        song.checkHit(accuracyDeltaMs, "Lane1");
+    } else if (event.code === "KeyK") {
+        song.checkHit(accuracyDeltaMs, "Lane2");
     }
 
     // Consume the event so it doesn't get handled twice
@@ -58,7 +59,7 @@ function onKeyDown(event) {
 }
 
 function onPlayClick() {
-    songStartTime = Date.now();
+    song.songStartTime = Date.now();
 
     intervalId = setInterval(gameLoop, 15);
 }
@@ -69,17 +70,13 @@ function gameLoop() {
 }
 
 function updateState() {
-    for (const note of song.notes) {
-        const noteStartingPosition = crossLineY - noteVelocity * note.time;
-        currentSongTimeMs = Date.now() - songStartTime;
-        note.view.y = noteVelocity * currentSongTimeMs + noteStartingPosition;
-    }
+    song.update(crossLineY, noteVelocity);
 }
 
 function draw() {
     clearCanvas();
 
-    drawText(currentSongTimeMs);
+    drawText(song.currentSongTimeMs);
     drawLine(0, crossLineY, 1000, crossLineY, "white");
 
     drawSong(song);
@@ -88,7 +85,12 @@ function draw() {
 }
 
 function drawSong(song) {
-    for (const note of song.notes){
+    drawLane(song.lane1);
+    drawLane(song.lane2);
+}
+
+function drawLane(lane) {
+    for (const note of lane){
         drawNote(note);
     }
 }
@@ -129,20 +131,8 @@ function drawDebug() {
     const windowEndLineY = crossLineY + accuracyDeltaMs * noteVelocity;
     drawLine(0, windowStartLineY , 1000, windowStartLineY, "grey");
     drawLine(0, windowEndLineY, 1000, windowEndLineY, "grey");
-
-    for (const ySnapshot of noteSnapshots) {
-        drawRectangle(98, ySnapshot - 2, 4, 4, "black");
-    }
 }
 
 function clearCanvas() {
     context.clearRect(0, 0, canvas.width, canvas.height);
-}
-
-function makeSongSnapshot() {
-    noteSnapshots = [];
-
-    for (const note of song.notes) {
-        noteSnapshots.push(note.view.y);
-    }
 }
