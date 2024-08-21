@@ -27,14 +27,23 @@ function loadGame() {
     song = new Song(
         songVelocity,
         [
-            new Note(2000, new NoteView(50, 0, 40)),
-            new Note(3000, new NoteView(50, 0, 40)),
-            new Note(5000, new NoteView(50, 0, 40))
+            new Note(2000, new NoteView(50, 0, 40), crossLineY, songVelocity),
+            new Note(3000, new NoteView(50, 0, 40), crossLineY, songVelocity),
+            new Note(5000, new NoteView(50, 0, 40), crossLineY, songVelocity)
         ],
         [
-            new Note(1000, new NoteView(100, 0, 40)),
-            new Note(2000, new NoteView(100, 0, 40)),
-            new Note(6000, new NoteView(100, 0, 40))
+            new Note(1000, new NoteView(100, 0, 40), crossLineY, songVelocity),
+            new Note(2000, new NoteView(100, 0, 40), crossLineY, songVelocity),
+            new Note(6000, new NoteView(100, 0, 40), crossLineY, songVelocity)
+        ],
+        [
+            new Note(3000, new NoteView(150, 0, 40), crossLineY, songVelocity),
+            new Note(4000, new NoteView(150, 0, 40), crossLineY, songVelocity),
+            new Note(5000, new NoteView(150, 0, 40), crossLineY, songVelocity)
+        ],
+        [
+            new Note(4000, new NoteView(200, 0, 40), crossLineY, songVelocity),
+            new Note(6000, new NoteView(200, 0, 40), crossLineY, songVelocity)
         ]
     );
 }
@@ -45,12 +54,16 @@ function onKeyDown(event) {
         return; 
     }
 
-    const consumed = ["KeyJ","KeyK"].includes(event.code);
+    const consumed = ["KeyD","KeyF", "KeyJ","KeyK"].includes(event.code);
 
-    if (event.code === "KeyJ") {
+    if (event.code === "KeyD") {
         song.checkHit(accuracyDeltaMs, "Lane1");
-    } else if (event.code === "KeyK") {
+    } else if (event.code === "KeyF") {
         song.checkHit(accuracyDeltaMs, "Lane2");
+    } else if (event.code === "KeyJ") {
+        song.checkHit(accuracyDeltaMs, "Lane3");
+    } else if (event.code === "KeyK") {
+        song.checkHit(accuracyDeltaMs, "Lane4");
     }
 
     // Consume the event so it doesn't get handled twice

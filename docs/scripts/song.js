@@ -1,8 +1,10 @@
 class Song {
-    constructor(songVelocity, lane1, lane2) {
+    constructor(songVelocity, lane1, lane2, lane3, lane4) {
         this.lanes = {
             "Lane1": lane1,
-            "Lane2": lane2
+            "Lane2": lane2,
+            "Lane3": lane3,
+            "Lane4": lane4
         };
 
         this.songStartTime = 0;
@@ -24,16 +26,13 @@ class Song {
 
     update() {
         this.currentSongTimeMs = Date.now() - this.songStartTime;
-
-        this.moveNote(this.lane1);
-        this.moveNote(this.lane2);
+        this.moveNote();
     }
 
     moveNote() {
         for (const [laneName, laneNotes] of Object.entries(this.lanes)) {
             for (const note of laneNotes) {
-                const noteStartingPosition = crossLineY - this.songVelocity * note.time;
-                note.view.y = this.songVelocity * this.currentSongTimeMs + noteStartingPosition;
+                note.view.y = this.songVelocity * this.currentSongTimeMs + note.startingPosition;
             }
         }
     }
