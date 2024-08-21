@@ -1,20 +1,19 @@
 class Song {
-    constructor(lane1, lane2) {
-        this.lane1 = lane1;
-        this.lane2 = lane2;
+    constructor(songVelocity, lane1, lane2) {
+        this.lanes = {
+            "Lane1": lane1,
+            "Lane2": lane2
+        };
 
         this.songStartTime = 0;
         this.currentSongTimeMs = 0;
+        this.songVelocity = songVelocity;
     }
 
     checkHit(accuracyDeltaMs, laneName) {
         const curSongTime = Date.now() - this.songStartTime;
 
-        if (laneName === "Lane1") {
-            this.checkHitOnLane(this.lane1, curSongTime, accuracyDeltaMs);
-        } else if (laneName === "Lane2") {
-            this.checkHitOnLane(this.lane2, curSongTime, accuracyDeltaMs);
-        }
+        this.checkHitOnLane(this.lanes[laneName], curSongTime, accuracyDeltaMs);
     }
 
     checkHitOnLane(lane, curSongTime, accuracyDeltaMs) {
@@ -23,17 +22,19 @@ class Song {
         }
     }
 
-    update(crossLineY, noteVelocity) {
+    update() {
         this.currentSongTimeMs = Date.now() - this.songStartTime;
 
         this.moveNote(this.lane1);
         this.moveNote(this.lane2);
     }
 
-    moveNote(lane) {
-        for (const note of lane) {
-            const noteStartingPosition = crossLineY - noteVelocity * note.time;
-            note.view.y = noteVelocity * this.currentSongTimeMs + noteStartingPosition;
+    moveNote() {
+        for (const [laneName, laneNotes] of Object.entries(this.lanes)) {
+            for (const note of laneNotes) {
+                const noteStartingPosition = crossLineY - this.songVelocity * note.time;
+                note.view.y = this.songVelocity * this.currentSongTimeMs + noteStartingPosition;
+            }
         }
     }
 }

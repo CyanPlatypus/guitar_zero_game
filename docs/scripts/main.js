@@ -7,8 +7,6 @@ const accuracyDeltaMs = 100;
 var canvas;
 var context;
 
-var noteVelocity = 0;
-
 var song;
 
 function onLoad() {
@@ -20,22 +18,25 @@ function onLoad() {
     window.addEventListener("keydown", onKeyDown);
     canvas.addEventListener("click", onPlayClick);
 
-    noteVelocity = canvas.height / canvasVerticalPassTimeMs;
+    
 }
 
 function loadGame() {
+    const songVelocity = canvas.height / canvasVerticalPassTimeMs;
+
     song = new Song(
-    [
-        new Note(2000, new NoteView(50, 0, 40)),
-        new Note(3000, new NoteView(50, 0, 40)),
-        new Note(5000, new NoteView(50, 0, 40))
-    ],
-    [
-        new Note(1000, new NoteView(100, 0, 40)),
-        new Note(2000, new NoteView(100, 0, 40)),
-        new Note(6000, new NoteView(100, 0, 40))
-    ]
-);
+        songVelocity,
+        [
+            new Note(2000, new NoteView(50, 0, 40)),
+            new Note(3000, new NoteView(50, 0, 40)),
+            new Note(5000, new NoteView(50, 0, 40))
+        ],
+        [
+            new Note(1000, new NoteView(100, 0, 40)),
+            new Note(2000, new NoteView(100, 0, 40)),
+            new Note(6000, new NoteView(100, 0, 40))
+        ]
+    );
 }
 
 function onKeyDown(event) {
@@ -70,7 +71,7 @@ function gameLoop() {
 }
 
 function updateState() {
-    song.update(crossLineY, noteVelocity);
+    song.update(crossLineY);
 }
 
 function draw() {
@@ -85,13 +86,10 @@ function draw() {
 }
 
 function drawSong(song) {
-    drawLane(song.lane1);
-    drawLane(song.lane2);
-}
-
-function drawLane(lane) {
-    for (const note of lane){
-        drawNote(note);
+    for ([laneName, laneNotes] of Object.entries(song.lanes)) {
+        for (const note of laneNotes){
+            drawNote(note);
+        }
     }
 }
 
@@ -127,8 +125,8 @@ function drawText(text) {
 }
 
 function drawDebug() {
-    const windowStartLineY = crossLineY - accuracyDeltaMs * noteVelocity;
-    const windowEndLineY = crossLineY + accuracyDeltaMs * noteVelocity;
+    const windowStartLineY = crossLineY - accuracyDeltaMs * song.songVelocity;
+    const windowEndLineY = crossLineY + accuracyDeltaMs * song.songVelocity;
     drawLine(0, windowStartLineY , 1000, windowStartLineY, "grey");
     drawLine(0, windowEndLineY, 1000, windowEndLineY, "grey");
 }
