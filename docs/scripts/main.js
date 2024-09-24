@@ -53,7 +53,12 @@ function onKeyDown(event) {
         // Do nothing if event already handled
         return; 
     }
+    if (event.repeat) {
+        // Given key is being held down such that it is automatically repeating
+        return;
+    }
 
+    console.log('hi');
     const consumed = ["KeyD","KeyF", "KeyJ","KeyK"].includes(event.code);
 
     if (event.code === "KeyD") {
