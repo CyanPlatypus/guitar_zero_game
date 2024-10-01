@@ -2,6 +2,8 @@ window.addEventListener("load", onLoad);
 
 const canvasVerticalPassTimeMs = 5000;
 const crossLineY = 350;
+const lineWidth = 80;
+const separatorWidth = 1;
 const accuracyDeltaMs = 100;
 
 var canvas;
@@ -23,27 +25,33 @@ function onLoad() {
 
 function loadGame() {
     const songVelocity = canvas.height / canvasVerticalPassTimeMs;
+    
+    const centerX = canvas.width / 2;
+    const line1x = centerX - (lineWidth * 2 + separatorWidth * 1.5) + (lineWidth / 2);
+    const line2x = centerX - (lineWidth + separatorWidth * 0.5) + (lineWidth / 2);
+    const line3x = centerX + separatorWidth * 0.5 + (lineWidth / 2);
+    const line4x = centerX + lineWidth + separatorWidth * 1.5 + (lineWidth / 2);
 
     song = new Song(
         songVelocity,
         [
-            new Note(2000, new NoteView(50, 0, 40), crossLineY, songVelocity),
-            new Note(3000, new NoteView(50, 0, 40), crossLineY, songVelocity),
-            new Note(5000, new NoteView(50, 0, 40), crossLineY, songVelocity)
+            new Note(2000, new NoteView(line1x, 0, lineWidth), crossLineY, songVelocity),
+            new Note(3000, new NoteView(line1x, 0, lineWidth), crossLineY, songVelocity),
+            new Note(5000, new NoteView(line1x, 0, lineWidth), crossLineY, songVelocity)
         ],
         [
-            new Note(1000, new NoteView(100, 0, 40), crossLineY, songVelocity),
-            new Note(2000, new NoteView(100, 0, 40), crossLineY, songVelocity),
-            new Note(6000, new NoteView(100, 0, 40), crossLineY, songVelocity)
+            new Note(1000, new NoteView(line2x, 0, lineWidth), crossLineY, songVelocity),
+            new Note(2000, new NoteView(line2x, 0, lineWidth), crossLineY, songVelocity),
+            new Note(6000, new NoteView(line2x, 0, lineWidth), crossLineY, songVelocity)
         ],
         [
-            new Note(3000, new NoteView(150, 0, 40), crossLineY, songVelocity),
-            new Note(4000, new NoteView(150, 0, 40), crossLineY, songVelocity),
-            new Note(5000, new NoteView(150, 0, 40), crossLineY, songVelocity)
+            new Note(3000, new NoteView(line3x, 0, lineWidth), crossLineY, songVelocity),
+            new Note(4000, new NoteView(line3x, 0, lineWidth), crossLineY, songVelocity),
+            new Note(5000, new NoteView(line3x, 0, lineWidth), crossLineY, songVelocity)
         ],
         [
-            new Note(4000, new NoteView(200, 0, 40), crossLineY, songVelocity),
-            new Note(6000, new NoteView(200, 0, 40), crossLineY, songVelocity)
+            new Note(4000, new NoteView(line4x, 0, lineWidth), crossLineY, songVelocity),
+            new Note(6000, new NoteView(line4x, 0, lineWidth), crossLineY, songVelocity)
         ]
     );
 }
@@ -96,11 +104,32 @@ function draw() {
     clearCanvas();
 
     drawText(song.currentSongTimeMs);
-    drawLine(0, crossLineY, 1000, crossLineY, "white");
+
+    drawLaneBase();
 
     drawSong(song);
 
-    drawDebug()
+    // drawDebug()
+}
+
+function drawLaneBase() {
+    const centerX = canvas.width / 2;
+    const laneBaseWidth = lineWidth * 4 + separatorWidth * 3;
+    const laneBaseX = centerX - laneBaseWidth / 2;
+    const separator1x = centerX - separatorWidth * 1.5 - lineWidth;
+    const separator2x = centerX - separatorWidth * 0.5;
+    const separator3x = centerX + separatorWidth * 0.5 + lineWidth;
+
+    // base
+    drawRectangle(laneBaseX, 0, laneBaseWidth, canvas.height, "white");
+
+    // separators
+    drawLine(separator1x, 0, separator1x, canvas.height, "grey", separatorWidth);
+    drawLine(separator2x, 0, separator2x, canvas.height, "grey", separatorWidth);
+    drawLine(separator3x, 0, separator3x, canvas.height, "grey", separatorWidth);
+
+    // cross line
+    drawLine(laneBaseX, crossLineY, laneBaseX + laneBaseWidth, crossLineY, "grey", 3);
 }
 
 function drawSong(song) {
@@ -120,19 +149,19 @@ function drawNote(note) {
     drawRectangle(note.view.x - 2, note.view.y - 2, 4, 4, "black"); // dot in the center!
 }
 
-function drawRectangle(x, y, h, w, color) {
+function drawRectangle(x, y, w, h, color) {
     context.beginPath();
-    context.rect(x, y, h, w);
+    context.rect(x, y, w, h);
     context.fillStyle = color;
     context.closePath();
     context.fill();
 }
 
-function drawLine(x1, y1, x2, y2, color) {
+function drawLine(x1, y1, x2, y2, color, lineWidth = 2) {
     context.beginPath();
     context.moveTo(x1, y1);
     context.lineTo(x2, y2);
-    context.lineWidth = 2;
+    context.lineWidth = lineWidth;
     context.strokeStyle = color;
     context.stroke();
 }
