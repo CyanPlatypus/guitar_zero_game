@@ -1,8 +1,9 @@
 class NoteView {
-    constructor(x, y, radius) {
+    constructor(x, y, width, height) {
         this.x = x;
         this.y = y;
-        this.radius = radius;
+        this.width = width;
+        this.height = height;
     }
 
     move(newX, newY) {

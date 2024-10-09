@@ -1,10 +1,11 @@
 window.addEventListener("load", onLoad);
 
-const canvasVerticalPassTimeMs = 5000;
-const crossLineY = 350;
+const canvasVerticalPassTimeMs = 2000;
+const crossLineY = 400;
 const lineWidth = 80;
+const noteWidth = 70;
 const separatorWidth = 1;
-const accuracyDeltaMs = 100;
+const accuracyDeltaMs = 120;
 
 var canvas;
 var context;
@@ -24,9 +25,10 @@ function onLoad() {
 }
 
 function loadGame() {
-    const songVelocity = canvas.height / canvasVerticalPassTimeMs;
-    
     const centerX = canvas.width / 2;
+    const songVelocity = canvas.height / canvasVerticalPassTimeMs;
+    const noteHeight = 2 * accuracyDeltaMs * songVelocity;
+    
     const line1x = centerX - (lineWidth * 2 + separatorWidth * 1.5) + (lineWidth / 2);
     const line2x = centerX - (lineWidth + separatorWidth * 0.5) + (lineWidth / 2);
     const line3x = centerX + separatorWidth * 0.5 + (lineWidth / 2);
@@ -35,23 +37,23 @@ function loadGame() {
     song = new Song(
         songVelocity,
         [
-            new Note(2000, new NoteView(line1x, 0, lineWidth), crossLineY, songVelocity),
-            new Note(3000, new NoteView(line1x, 0, lineWidth), crossLineY, songVelocity),
-            new Note(5000, new NoteView(line1x, 0, lineWidth), crossLineY, songVelocity)
+            new Note(2000, new NoteView(line1x, 0, noteWidth, noteHeight), crossLineY, songVelocity),
+            new Note(3000, new NoteView(line1x, 0, noteWidth, noteHeight), crossLineY, songVelocity),
+            new Note(5000, new NoteView(line1x, 0, noteWidth, noteHeight), crossLineY, songVelocity)
         ],
         [
-            new Note(1000, new NoteView(line2x, 0, lineWidth), crossLineY, songVelocity),
-            new Note(2000, new NoteView(line2x, 0, lineWidth), crossLineY, songVelocity),
-            new Note(6000, new NoteView(line2x, 0, lineWidth), crossLineY, songVelocity)
+            new Note(1000, new NoteView(line2x, 0, noteWidth, noteHeight), crossLineY, songVelocity),
+            new Note(2000, new NoteView(line2x, 0, noteWidth, noteHeight), crossLineY, songVelocity),
+            new Note(6000, new NoteView(line2x, 0, noteWidth, noteHeight), crossLineY, songVelocity)
         ],
         [
-            new Note(3000, new NoteView(line3x, 0, lineWidth), crossLineY, songVelocity),
-            new Note(4000, new NoteView(line3x, 0, lineWidth), crossLineY, songVelocity),
-            new Note(5000, new NoteView(line3x, 0, lineWidth), crossLineY, songVelocity)
+            new Note(3000, new NoteView(line3x, 0, noteWidth, noteHeight), crossLineY, songVelocity),
+            new Note(4000, new NoteView(line3x, 0, noteWidth, noteHeight), crossLineY, songVelocity),
+            new Note(5000, new NoteView(line3x, 0, noteWidth, noteHeight), crossLineY, songVelocity)
         ],
         [
-            new Note(4000, new NoteView(line4x, 0, lineWidth), crossLineY, songVelocity),
-            new Note(6000, new NoteView(line4x, 0, lineWidth), crossLineY, songVelocity)
+            new Note(4000, new NoteView(line4x, 0, noteWidth, noteHeight), crossLineY, songVelocity),
+            new Note(6000, new NoteView(line4x, 0, noteWidth, noteHeight), crossLineY, songVelocity)
         ]
     );
 }
@@ -109,7 +111,7 @@ function draw() {
 
     drawSong(song);
 
-    // drawDebug()
+    // drawDebug();
 }
 
 function drawLaneBase() {
@@ -141,12 +143,12 @@ function drawSong(song) {
 }
 
 function drawNote(note) {
-    drawX = note.view.x - note.view.radius / 2;
-    drawY = note.view.y - note.view.radius / 2;
+    drawX = note.view.x - note.view.width / 2;
+    drawY = note.view.y - note.view.height / 2;
 
-    const noteColor = note.isPressed ? "green" : "red";
-    drawRectangle(drawX, drawY, note.view.radius, note.view.radius, noteColor);
-    drawRectangle(note.view.x - 2, note.view.y - 2, 4, 4, "black"); // dot in the center!
+    const noteColor = note.isPressed ? "lightgrey" : "black";
+    drawRectangle(drawX, drawY, note.view.width, note.view.height, noteColor);
+    // drawRectangle(note.view.x - 2, note.view.y - 2, 4, 4, "black"); // dot in the center!
 }
 
 function drawRectangle(x, y, w, h, color) {
