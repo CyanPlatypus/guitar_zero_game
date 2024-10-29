@@ -12,6 +12,20 @@ var context;
 
 var song;
 
+var player;
+function onYouTubeIframeAPIReady() {
+    console.log('hi');
+    player = new YT.Player('player', {
+        height: '300',
+        width: '400',
+        videoId: '-h5bYX5L-0s',
+        events: {
+            // 'onReady': onPlayerReady,
+            // 'onStateChange': onPlayerStateChange
+        }
+    });
+}
+
 function onLoad() {
     canvas = document.getElementById("canvas");
     context = canvas.getContext("2d");
@@ -20,8 +34,6 @@ function onLoad() {
 
     window.addEventListener("keydown", onKeyDown);
     canvas.addEventListener("click", onPlayClick);
-
-    
 }
 
 function loadGame() {
