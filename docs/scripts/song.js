@@ -1,5 +1,5 @@
 class Song {
-    constructor(songVelocity, lane1, lane2, lane3, lane4) {
+    constructor(title, youtubeVideoId, songVelocity, lane1, lane2, lane3, lane4) {
         this.lanes = {
             "Lane1": lane1,
             "Lane2": lane2,
@@ -7,6 +7,8 @@ class Song {
             "Lane4": lane4
         };
 
+        this.title = title;
+        this.youtubeVideoId = youtubeVideoId;
         this.songStartTime = 0;
         this.currentSongTimeMs = 0;
         this.songVelocity = songVelocity;

@@ -12,6 +12,18 @@ var context;
 
 var song;
 
+var songs = [
+    new Song("time to be so small", "id1", 0, [], [], [], []),
+    new Song("time to be this big", "id2", 0, [], [], [], []),
+    new Song("time to be somewhere in the middle", "id3", 0, [], [], [], []),
+    new Song("time to be so small", "id1", 0, [], [], [], []),
+    new Song("time to be this big", "id2", 0, [], [], [], []),
+    new Song("time to be somewhere in the middle", "id3", 0, [], [], [], []),
+    new Song("time to be so small", "id1", 0, [], [], [], []),
+    new Song("time to be this big", "id2", 0, [], [], [], []),
+    new Song("time to be somewhere in the middle", "id3", 0, [], [], [], []),
+];
+
 var player;
 function onYouTubeIframeAPIReady() {
     player = new YT.Player('player', {
@@ -26,13 +38,24 @@ function onYouTubeIframeAPIReady() {
 }
 
 function onLoad() {
-    canvas = document.getElementById("canvas");
-    context = canvas.getContext("2d");
+    // canvas = document.getElementById("canvas");
+    // context = canvas.getContext("2d");
 
-    loadGame();
+    const songListContainer = document.getElementById("main-menu-song-list");
+    
+    for (const s of songs) {
+        var button = document.createElement("div");
+        button.innerHTML = s.title;
+        button.classList.add("main-menu-button");
+        songListContainer.appendChild(button);
 
-    window.addEventListener("keydown", onKeyDown);
-    canvas.addEventListener("click", onPlayClick);
+        button.addEventListener("click", () => { console.log(s.youtubeVideoId); });
+    }
+
+    // loadGame();
+
+    // window.addEventListener("keydown", onKeyDown);
+    // canvas.addEventListener("click", onPlayClick);
 }
 
 function loadGame() {
@@ -46,6 +69,8 @@ function loadGame() {
     const line4x = centerX + lineWidth + separatorWidth * 1.5 + (lineWidth / 2);
 
     song = new Song(
+        "Gravity Falls Theme",
+        "-h5bYX5L-0s",
         songVelocity,
         [
             new Note(2000, new NoteView(line1x, 0, noteWidth, noteHeight), crossLineY, songVelocity),

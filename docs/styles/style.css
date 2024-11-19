@@ -36,13 +36,14 @@
 
 .main-menu-button:hover {
     background-color: pink;
+    cursor: pointer;
 }
 
 .main-menu-button:active {
     background-color: white;
 }
 
-.main-menu-song-list {
+#main-menu-song-list {
     margin-top: 20px;
     height: 300px;
     overflow: auto;
