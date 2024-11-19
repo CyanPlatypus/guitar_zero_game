@@ -3,3 +3,56 @@
     margin: auto;
     background-color: pink;
 }
+
+.main-menu {
+    font-family: fantasy;
+    padding: 16px;
+    width: 300px;
+    background-color: black;    
+}
+
+.main-menu-title {
+    text-align: center;
+    font-size: 40;
+    color: pink;
+    text-shadow: green 2px 2px;
+}
+
+.main-menu-button {
+    margin: 8px;
+    padding: 8px;
+    background-color: pink;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 3px 3px green;
+    /* font-weight: bold; */
+}
+
+.main-menu-button:hover, .main-menu-button:active {
+    position: relative;
+    top: 2px;
+    right: -2px;
+    box-shadow: 1px 1px green;
+}
+
+.main-menu-button:hover {
+    background-color: pink;
+}
+
+.main-menu-button:active {
+    background-color: white;
+}
+
+.main-menu-song-list {
+    margin-top: 20px;
+    height: 300px;
+    overflow: auto;
+    scrollbar-color: black pink;
+}
+
+.main-menu-button:first-child {
+    margin-top: 0px;
+}
+
+.main-menu-button:last-child {
+    margin-bottom: 0px;
+}

@@ -14,9 +14,8 @@ var song;
 
 var player;
 function onYouTubeIframeAPIReady() {
-    console.log('hi');
     player = new YT.Player('player', {
-        height: '300',
+        height: '200',
         width: '400',
         videoId: '-h5bYX5L-0s',
         events: {
@@ -101,6 +100,7 @@ function onKeyDown(event) {
 
 function onPlayClick() {
     song.songStartTime = Date.now();
+    player.playVideo();
 
     intervalId = setInterval(gameLoop, 15);
 }
