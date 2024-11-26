@@ -4,11 +4,12 @@
     background-color: pink;
 }
 
-.main-menu {
+#main-menu {
     font-family: fantasy;
     padding: 16px;
     width: 300px;
-    background-color: black;    
+    background-color: black;   
+    margin: auto;
 }
 
 .main-menu-title {

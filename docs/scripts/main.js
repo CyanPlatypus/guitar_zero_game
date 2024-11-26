@@ -12,17 +12,18 @@ var context;
 
 var song;
 
-var songs = [
-    new Song("time to be so small", "id1", 0, [], [], [], []),
-    new Song("time to be this big", "id2", 0, [], [], [], []),
-    new Song("time to be somewhere in the middle", "id3", 0, [], [], [], []),
-    new Song("time to be so small", "id1", 0, [], [], [], []),
-    new Song("time to be this big", "id2", 0, [], [], [], []),
-    new Song("time to be somewhere in the middle", "id3", 0, [], [], [], []),
-    new Song("time to be so small", "id1", 0, [], [], [], []),
-    new Song("time to be this big", "id2", 0, [], [], [], []),
-    new Song("time to be somewhere in the middle", "id3", 0, [], [], [], []),
-];
+var songs;
+// = [
+//     new Song("Gravity Falls Theme", "-h5bYX5L-0s", 0, [], [], [], []),
+//     new Song("time to be this big", "id2", 0, [], [], [], []),
+//     new Song("time to be somewhere in the middle", "id3", 0, [], [], [], []),
+//     new Song("time to be so small", "id1", 0, [], [], [], []),
+//     new Song("time to be this big", "id2", 0, [], [], [], []),
+//     new Song("time to be somewhere in the middle", "id3", 0, [], [], [], []),
+//     new Song("time to be so small", "id1", 0, [], [], [], []),
+//     new Song("time to be this big", "id2", 0, [], [], [], []),
+//     new Song("time to be somewhere in the middle", "id3", 0, [], [], [], []),
+// ];
 
 var player;
 function onYouTubeIframeAPIReady() {
@@ -37,30 +38,61 @@ function onYouTubeIframeAPIReady() {
     });
 }
 
+var menuScreen;
+var gameScreen;
+
 function onLoad() {
-    // canvas = document.getElementById("canvas");
-    // context = canvas.getContext("2d");
+    menuScreen = document.getElementById("main-menu");
+    gameScreen = document.getElementById("game-screen");
+    
+    loadSongs();
+    document.body.removeChild(menuScreen);
+
+    showMenu();
+}
+
+function showMenu()
+{
+    document.body.removeChild(gameScreen);
+    document.body.appendChild(menuScreen);
+}
+
+function showGame()
+{
+    document.body.removeChild(menuScreen);
+    document.body.appendChild(gameScreen);
+
+    canvas = document.getElementById("canvas");
+    context = canvas.getContext("2d");
+
+    // window.addEventListener("keydown", onKeyDown);
+    // canvas.addEventListener("click", onPlayClick);
+}
+
+function loadSongs() {
+    songs = [
+        loadGravityFalls()
+    ]
 
     const songListContainer = document.getElementById("main-menu-song-list");
-    
+
     for (const s of songs) {
         var button = document.createElement("div");
         button.innerHTML = s.title;
         button.classList.add("main-menu-button");
         songListContainer.appendChild(button);
 
-        button.addEventListener("click", () => { console.log(s.youtubeVideoId); });
+        button.addEventListener("click", () => { showGame(); });
     }
-
-    // loadGame();
-
-    // window.addEventListener("keydown", onKeyDown);
-    // canvas.addEventListener("click", onPlayClick);
 }
 
-function loadGame() {
-    const centerX = canvas.width / 2;
-    const songVelocity = canvas.height / canvasVerticalPassTimeMs;
+function loadGravityFalls() {
+    // const centerX = canvas.width / 2;
+    // const songVelocity = canvas.height / canvasVerticalPassTimeMs;
+    const canvasWidth = 1000;
+    const canvasHeight = 500;
+    const centerX = canvasWidth / 2;
+    const songVelocity = canvasHeight / canvasVerticalPassTimeMs;
     const noteHeight = 2 * accuracyDeltaMs * songVelocity;
     
     const line1x = centerX - (lineWidth * 2 + separatorWidth * 1.5) + (lineWidth / 2);
@@ -92,6 +124,8 @@ function loadGame() {
             new Note(6000, new NoteView(line4x, 0, noteWidth, noteHeight), crossLineY, songVelocity)
         ]
     );
+
+    return song;
 }
 
 function onKeyDown(event) {
