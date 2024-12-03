@@ -9,8 +9,9 @@ const accuracyDeltaMs = 120;
 
 var canvas;
 var context;
+var player;
 
-var song;
+var currentSong;
 
 var songs;
 // = [
@@ -25,18 +26,7 @@ var songs;
 //     new Song("time to be somewhere in the middle", "id3", 0, [], [], [], []),
 // ];
 
-var player;
-function onYouTubeIframeAPIReady() {
-    player = new YT.Player('player', {
-        height: '200',
-        width: '400',
-        videoId: '-h5bYX5L-0s',
-        events: {
-            // 'onReady': onPlayerReady,
-            // 'onStateChange': onPlayerStateChange
-        }
-    });
-}
+
 
 var menuScreen;
 var gameScreen;
@@ -45,7 +35,7 @@ function onLoad() {
     menuScreen = document.getElementById("main-menu");
     gameScreen = document.getElementById("game-screen");
     
-    loadSongs();
+    loadSongsIntoMenu();
     document.body.removeChild(menuScreen);
 
     showMenu();
@@ -57,19 +47,38 @@ function showMenu()
     document.body.appendChild(menuScreen);
 }
 
-function showGame()
+function showGame(song)
 {
+    currentSong = song;
+
     document.body.removeChild(menuScreen);
     document.body.appendChild(gameScreen);
 
     canvas = document.getElementById("canvas");
     context = canvas.getContext("2d");
 
-    // window.addEventListener("keydown", onKeyDown);
-    // canvas.addEventListener("click", onPlayClick);
+    // TODO: Remove listeners when we go to menu
+    window.addEventListener("keydown", onKeyDown);
+
+    player = new YT.Player('player', {
+        height: '200',
+        width: '400',
+        videoId: currentSong.youtubeVideoId,
+        events: {
+            'onReady': startGame,
+            // 'onStateChange': onPlayerStateChange
+        }
+    });
 }
 
-function loadSongs() {
+function startGame()
+{
+    currentSong.songStartTime = Date.now();
+    player.playVideo();
+    setInterval(gameLoop, 15);
+}
+
+function loadSongsIntoMenu() {
     songs = [
         loadGravityFalls()
     ]
@@ -82,7 +91,7 @@ function loadSongs() {
         button.classList.add("main-menu-button");
         songListContainer.appendChild(button);
 
-        button.addEventListener("click", () => { showGame(); });
+        button.addEventListener("click", () => { showGame(s); });
     }
 }
 
@@ -100,7 +109,7 @@ function loadGravityFalls() {
     const line3x = centerX + separatorWidth * 0.5 + (lineWidth / 2);
     const line4x = centerX + lineWidth + separatorWidth * 1.5 + (lineWidth / 2);
 
-    song = new Song(
+    return new Song(
         "Gravity Falls Theme",
         "-h5bYX5L-0s",
         songVelocity,
@@ -124,8 +133,6 @@ function loadGravityFalls() {
             new Note(6000, new NoteView(line4x, 0, noteWidth, noteHeight), crossLineY, songVelocity)
         ]
     );
-
-    return song;
 }
 
 function onKeyDown(event) {
@@ -142,13 +149,13 @@ function onKeyDown(event) {
     const consumed = ["KeyD","KeyF", "KeyJ","KeyK"].includes(event.code);
 
     if (event.code === "KeyD") {
-        song.checkHit(accuracyDeltaMs, "Lane1");
+        currentSong.checkHit(accuracyDeltaMs, "Lane1");
     } else if (event.code === "KeyF") {
-        song.checkHit(accuracyDeltaMs, "Lane2");
+        currentSong.checkHit(accuracyDeltaMs, "Lane2");
     } else if (event.code === "KeyJ") {
-        song.checkHit(accuracyDeltaMs, "Lane3");
+        currentSong.checkHit(accuracyDeltaMs, "Lane3");
     } else if (event.code === "KeyK") {
-        song.checkHit(accuracyDeltaMs, "Lane4");
+        currentSong.checkHit(accuracyDeltaMs, "Lane4");
     }
 
     // Consume the event so it doesn't get handled twice
@@ -158,8 +165,8 @@ function onKeyDown(event) {
 }
 
 function onPlayClick() {
-    song.songStartTime = Date.now();
-    player.playVideo();
+    currentSong.songStartTime = Date.now();
+    // player.playVideo();
 
     intervalId = setInterval(gameLoop, 15);
 }
@@ -170,17 +177,17 @@ function gameLoop() {
 }
 
 function updateState() {
-    song.update(crossLineY);
+    currentSong.update(crossLineY);
 }
 
 function draw() {
     clearCanvas();
 
-    drawText(song.currentSongTimeMs);
+    drawText(currentSong.currentSongTimeMs);
 
     drawLaneBase();
 
-    drawSong(song);
+    drawSong();
 
     // drawDebug();
 }
@@ -205,8 +212,8 @@ function drawLaneBase() {
     drawLine(laneBaseX, crossLineY, laneBaseX + laneBaseWidth, crossLineY, "grey", 3);
 }
 
-function drawSong(song) {
-    for ([laneName, laneNotes] of Object.entries(song.lanes)) {
+function drawSong() {
+    for ([laneName, laneNotes] of Object.entries(currentSong.lanes)) {
         for (const note of laneNotes){
             drawNote(note);
         }
@@ -245,8 +252,8 @@ function drawText(text) {
 }
 
 function drawDebug() {
-    const windowStartLineY = crossLineY - accuracyDeltaMs * song.songVelocity;
-    const windowEndLineY = crossLineY + accuracyDeltaMs * song.songVelocity;
+    const windowStartLineY = crossLineY - accuracyDeltaMs * currentSong.songVelocity;
+    const windowEndLineY = crossLineY + accuracyDeltaMs * currentSong.songVelocity;
     drawLine(0, windowStartLineY , 1000, windowStartLineY, "grey");
     drawLine(0, windowEndLineY, 1000, windowEndLineY, "grey");
 }
