@@ -26,8 +26,6 @@ var songs;
 //     new Song("time to be somewhere in the middle", "id3", 0, [], [], [], []),
 // ];
 
-
-
 var menuScreen;
 var gameScreen;
 
@@ -41,15 +39,18 @@ function onLoad() {
     showMenu();
 }
 
-function showMenu()
-{
+function showMenu() {
     document.body.removeChild(gameScreen);
     document.body.appendChild(menuScreen);
 }
 
-function showGame(song)
-{
-    currentSong = song;
+function showGame(song) {
+    currentSong = new NewSongRuntime(song,
+        NewSongRuntime.toNoteRuntimeArray(song.lanes.Lane1, GameCanvas.line1x),
+        NewSongRuntime.toNoteRuntimeArray(song.lanes.Lane2, GameCanvas.line2x),
+        NewSongRuntime.toNoteRuntimeArray(song.lanes.Lane3, GameCanvas.line3x),
+        NewSongRuntime.toNoteRuntimeArray(song.lanes.Lane4, GameCanvas.line4x)
+    );
 
     document.body.removeChild(menuScreen);
     document.body.appendChild(gameScreen);
@@ -71,16 +72,29 @@ function showGame(song)
     });
 }
 
-function startGame()
-{
+function startGame() {
     currentSong.songStartTime = Date.now();
     player.playVideo();
     setInterval(gameLoop, 15);
 }
 
 function loadSongsIntoMenu() {
+    const gravityFalls = new NewSong("Gravity Falls Theme", "-h5bYX5L-0s",
+        [2000, 3000, 5000],
+        [1000, 2000, 6000],
+        [2000, 4000, 6000],
+        [4000, 6000]);
+
+    const lastChristmas = new NewSong("Last Christmas", "akXcsRr6o6c",
+        [2000, 3000, 4000],
+        [1000, 6000],
+        [2000, 4000],
+        [4000, 5000, 6000]);
+
     songs = [
-        loadGravityFalls()
+        //loadGravityFalls()
+        gravityFalls,
+        lastChristmas
     ]
 
     const songListContainer = document.getElementById("main-menu-song-list");
@@ -221,11 +235,11 @@ function drawSong() {
 }
 
 function drawNote(note) {
-    drawX = note.view.x - note.view.width / 2;
-    drawY = note.view.y - note.view.height / 2;
+    drawX = note.view.x - NewNoteView.width / 2;
+    drawY = note.view.y - NewNoteView.height / 2;
 
     const noteColor = note.isPressed ? "lightgrey" : "black";
-    drawRectangle(drawX, drawY, note.view.width, note.view.height, noteColor);
+    drawRectangle(drawX, drawY, NewNoteView.width, NewNoteView.height, noteColor);
     // drawRectangle(note.view.x - 2, note.view.y - 2, 4, 4, "black"); // dot in the center!
 }
 
