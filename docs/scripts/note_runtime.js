@@ -1,9 +1,9 @@
-class Note {
-    constructor(time, view, crossLineY, songVelocity) {
+class NoteRuntime {
+    constructor(time, startingPosition, viewX) {
         this.time = time;
+        this.startingPosition = startingPosition;
+        this.view = new NoteView(viewX, 0);
         this.isPressed = false;
-        this.view = view;
-        this.startingPosition = crossLineY - songVelocity * this.time;
     }
 
     checkHit(curSongTime, accuracyDeltaMs) {

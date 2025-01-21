@@ -1,13 +1,10 @@
 class NoteView {
-    constructor(x, y, width, height) {
+    static width = 70;
+    static height = 2 * GameplaySettings.accuracyDeltaMs * GameCanvas.canvasHeight 
+        / GameplaySettings.canvasVerticalPassTimeMs;
+
+    constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.width = width;
-        this.height = height;
-    }
-
-    move(newX, newY) {
-        this.x = newX;
-        this.y = newY;
     }
 }

@@ -14,17 +14,6 @@ var player;
 var currentSong;
 
 var songs;
-// = [
-//     new Song("Gravity Falls Theme", "-h5bYX5L-0s", 0, [], [], [], []),
-//     new Song("time to be this big", "id2", 0, [], [], [], []),
-//     new Song("time to be somewhere in the middle", "id3", 0, [], [], [], []),
-//     new Song("time to be so small", "id1", 0, [], [], [], []),
-//     new Song("time to be this big", "id2", 0, [], [], [], []),
-//     new Song("time to be somewhere in the middle", "id3", 0, [], [], [], []),
-//     new Song("time to be so small", "id1", 0, [], [], [], []),
-//     new Song("time to be this big", "id2", 0, [], [], [], []),
-//     new Song("time to be somewhere in the middle", "id3", 0, [], [], [], []),
-// ];
 
 var menuScreen;
 var gameScreen;
@@ -45,11 +34,11 @@ function showMenu() {
 }
 
 function showGame(song) {
-    currentSong = new NewSongRuntime(song,
-        NewSongRuntime.toNoteRuntimeArray(song.lanes.Lane1, GameCanvas.line1x),
-        NewSongRuntime.toNoteRuntimeArray(song.lanes.Lane2, GameCanvas.line2x),
-        NewSongRuntime.toNoteRuntimeArray(song.lanes.Lane3, GameCanvas.line3x),
-        NewSongRuntime.toNoteRuntimeArray(song.lanes.Lane4, GameCanvas.line4x)
+    currentSong = new SongRuntime(song,
+        SongRuntime.toNoteRuntimeArray(song.lanes.Lane1, GameCanvas.line1x),
+        SongRuntime.toNoteRuntimeArray(song.lanes.Lane2, GameCanvas.line2x),
+        SongRuntime.toNoteRuntimeArray(song.lanes.Lane3, GameCanvas.line3x),
+        SongRuntime.toNoteRuntimeArray(song.lanes.Lane4, GameCanvas.line4x)
     );
 
     document.body.removeChild(menuScreen);
@@ -79,13 +68,13 @@ function startGame() {
 }
 
 function loadSongsIntoMenu() {
-    const gravityFalls = new NewSong("Gravity Falls Theme", "-h5bYX5L-0s",
+    const gravityFalls = new Song("Gravity Falls Theme", "-h5bYX5L-0s",
         [2000, 3000, 5000],
         [1000, 2000, 6000],
         [2000, 4000, 6000],
         [4000, 6000]);
 
-    const lastChristmas = new NewSong("Last Christmas", "akXcsRr6o6c",
+    const lastChristmas = new Song("Last Christmas", "akXcsRr6o6c",
         [2000, 3000, 4000],
         [1000, 6000],
         [2000, 4000],
@@ -235,11 +224,11 @@ function drawSong() {
 }
 
 function drawNote(note) {
-    drawX = note.view.x - NewNoteView.width / 2;
-    drawY = note.view.y - NewNoteView.height / 2;
+    drawX = note.view.x - NoteView.width / 2;
+    drawY = note.view.y - NoteView.height / 2;
 
     const noteColor = note.isPressed ? "lightgrey" : "black";
-    drawRectangle(drawX, drawY, NewNoteView.width, NewNoteView.height, noteColor);
+    drawRectangle(drawX, drawY, NoteView.width, NoteView.height, noteColor);
     // drawRectangle(note.view.x - 2, note.view.y - 2, 4, 4, "black"); // dot in the center!
 }
 
