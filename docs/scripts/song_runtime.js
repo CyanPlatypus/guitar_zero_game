@@ -14,15 +14,12 @@ class SongRuntime extends Song {
     }
 
     checkHit(accuracyDeltaMs, laneName) {
-        // todo: why do we compute curSongTime when we already have a prop currentSongTimeMs?
-        const curSongTime = Date.now() - this.songStartTime;
-
-        this.checkHitOnLane(this.lanes[laneName], curSongTime, accuracyDeltaMs);
+        this.checkHitOnLane(this.lanes[laneName], accuracyDeltaMs);
     }
 
-    checkHitOnLane(lane, curSongTime, accuracyDeltaMs) {
+    checkHitOnLane(lane, accuracyDeltaMs) {
         for (const note of lane) {
-            note.checkHit(curSongTime, accuracyDeltaMs);
+            note.checkHit(this.currentSongTimeMs, accuracyDeltaMs);
         }
     }
 
