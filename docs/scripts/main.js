@@ -18,6 +18,10 @@ var songs;
 var menuScreen;
 var gameScreen;
 
+var prevTime;
+var isPause = false;
+var intervalId;
+
 function onLoad() {
     menuScreen = document.getElementById("main-menu");
     gameScreen = document.getElementById("game-screen");
@@ -47,7 +51,6 @@ function showGame(song) {
     canvas = document.getElementById("canvas");
     context = canvas.getContext("2d");
 
-    // TODO: Remove listeners when we go to menu
     window.addEventListener("keydown", onKeyDown);
 
     player = new YT.Player('player', {
@@ -62,9 +65,9 @@ function showGame(song) {
 }
 
 function startGame() {
-    currentSong.songStartTime = Date.now();
     player.playVideo();
-    setInterval(gameLoop, 15);
+    prevTime = Date.now();
+    intervalId = setInterval(gameLoop, 15);
 }
 
 function loadSongsIntoMenu() {
@@ -138,6 +141,35 @@ function loadGravityFalls() {
     );
 }
 
+function handlePauseButton(keyCode) {
+    if (keyCode === "Escape") {
+        isPause = !isPause;
+        if (isPause)
+        {
+            clearInterval(intervalId);
+            player.pauseVideo();
+        }
+        else {
+            startGame();
+        }
+    }
+}
+
+function handleGameplayButtons(keyCode) {
+    if (isPause)
+        return;
+
+    if (keyCode === "KeyD") {
+        currentSong.checkHit(accuracyDeltaMs, "Lane1");
+    } else if (keyCode === "KeyF") {
+        currentSong.checkHit(accuracyDeltaMs, "Lane2");
+    } else if (keyCode === "KeyJ") {
+        currentSong.checkHit(accuracyDeltaMs, "Lane3");
+    } else if (keyCode === "KeyK") {
+        currentSong.checkHit(accuracyDeltaMs, "Lane4");
+    }
+}
+
 function onKeyDown(event) {
     if (event.defaultPrevented) {
         // Do nothing if event already handled
@@ -148,18 +180,10 @@ function onKeyDown(event) {
         return;
     }
 
-    console.log('hi');
-    const consumed = ["KeyD","KeyF", "KeyJ","KeyK"].includes(event.code);
+    const consumed = ["KeyD","KeyF", "KeyJ", "KeyK", "Escape"].includes(event.code);
 
-    if (event.code === "KeyD") {
-        currentSong.checkHit(accuracyDeltaMs, "Lane1");
-    } else if (event.code === "KeyF") {
-        currentSong.checkHit(accuracyDeltaMs, "Lane2");
-    } else if (event.code === "KeyJ") {
-        currentSong.checkHit(accuracyDeltaMs, "Lane3");
-    } else if (event.code === "KeyK") {
-        currentSong.checkHit(accuracyDeltaMs, "Lane4");
-    }
+    handlePauseButton(event.code)
+    handleGameplayButtons(event.code)
 
     // Consume the event so it doesn't get handled twice
     if (consumed) {
@@ -167,20 +191,18 @@ function onKeyDown(event) {
     }
 }
 
-function onPlayClick() {
-    currentSong.songStartTime = Date.now();
-    // player.playVideo();
-
-    intervalId = setInterval(gameLoop, 15);
-}
-
 function gameLoop() {
-    updateState();
+    var curTime = Date.now();
+    var elapsed = curTime - prevTime;
+
+    updateState(elapsed);
     draw();
+
+    prevTime = curTime;
 }
 
-function updateState() {
-    currentSong.update(crossLineY);
+function updateState(elapsed) {
+    currentSong.update(elapsed);
 }
 
 function draw() {

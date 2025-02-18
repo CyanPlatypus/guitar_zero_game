@@ -9,7 +9,6 @@ class SongRuntime extends Song {
     constructor(newSong, lane1, lane2, lane3, lane4) {
         super(newSong.title, newSong.youtubeVideoId, lane1, lane2, lane3, lane4);
         
-        this.songStartTime = 0;
         this.currentSongTimeMs = 0;
     }
 
@@ -23,8 +22,8 @@ class SongRuntime extends Song {
         }
     }
 
-    update() {
-        this.currentSongTimeMs = Date.now() - this.songStartTime;
+    update(passedTime) {
+        this.currentSongTimeMs += passedTime;
         this.moveNote();
     }
 
