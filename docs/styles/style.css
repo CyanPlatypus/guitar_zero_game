@@ -4,6 +4,13 @@
     background-color: pink;
 }
 
+#background-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;    
+    z-index: -1;
+}
+
 #main-menu {
     font-family: fantasy;
     padding: 16px;

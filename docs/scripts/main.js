@@ -16,6 +16,7 @@ var currentSong;
 var songs;
 
 var menuScreen;
+var menuBackground;
 var gameScreen;
 
 var prevTime;
@@ -32,9 +33,16 @@ function onLoad() {
     showMenu();
 }
 
+var backgroundImage;
+var horShift = 0;
+var verShift = 0;
+
 function showMenu() {
     document.body.removeChild(gameScreen);
     document.body.appendChild(menuScreen);
+
+    menuBackground = new MenuBackground();
+    menuBackground.start();
 }
 
 function showGame(song) {
@@ -45,6 +53,7 @@ function showGame(song) {
         SongRuntime.toNoteRuntimeArray(song.lanes.Lane4, GameCanvas.line4x)
     );
 
+    menuBackground.stop();
     document.body.removeChild(menuScreen);
     document.body.appendChild(gameScreen);
 
