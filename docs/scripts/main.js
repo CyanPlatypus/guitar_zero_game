@@ -33,10 +33,6 @@ function onLoad() {
     showMenu();
 }
 
-var backgroundImage;
-var horShift = 0;
-var verShift = 0;
-
 function showMenu() {
     document.body.removeChild(gameScreen);
     document.body.appendChild(menuScreen);
