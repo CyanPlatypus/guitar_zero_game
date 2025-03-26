@@ -15,32 +15,32 @@ var currentSong;
 
 var songs;
 
-var menuScreen;
+var mainMenuScreen;
 var menuBackground;
 var gameScreen;
-var pauseScreen;
+var pauseMenu;
 
 var prevTime;
 var isPause = false;
 var intervalId;
 
 function onLoad() {
-    menuScreen = document.getElementById("main-menu");
+    mainMenuScreen = document.getElementById("main-menu-screen");
     gameScreen = document.getElementById("game-screen");
-    pauseScreen = document.getElementById("pause-menu");
-    
+    pauseMenu = document.getElementById("pause-menu");
+
     loadSongsIntoMenu();
     addEventListenersToPauseMenu();
 
-    document.body.removeChild(menuScreen);
-    document.body.removeChild(pauseScreen);
+    document.body.removeChild(mainMenuScreen);
+    document.body.removeChild(pauseMenu);
 
     showMenu();
 }
 
 function showMenu() {
     document.body.removeChild(gameScreen);
-    document.body.appendChild(menuScreen);
+    document.body.appendChild(mainMenuScreen);
 
     menuBackground = new MenuBackground();
     menuBackground.start();
@@ -55,7 +55,7 @@ function showGame(song) {
     );
 
     menuBackground.stop();
-    document.body.removeChild(menuScreen);
+    document.body.removeChild(mainMenuScreen);
     document.body.appendChild(gameScreen);
 
     canvas = document.getElementById("canvas");
@@ -99,12 +99,12 @@ function loadSongsIntoMenu() {
         lastChristmas
     ]
 
-    const songListContainer = document.getElementById("main-menu-song-list");
+    const songListContainer = document.getElementById("main-menu-screen-song-list");
 
     for (const s of songs) {
         var button = document.createElement("div");
         button.innerHTML = s.title;
-        button.classList.add("main-menu-button");
+        button.classList.add("main-menu-screen-button");
         songListContainer.appendChild(button);
 
         button.addEventListener("click", () => { showGame(s); });
@@ -175,13 +175,13 @@ function togglePause() {
 }
 
 function pauseGame() {
-    document.body.appendChild(pauseScreen);
+    document.body.appendChild(pauseMenu);
     clearInterval(intervalId);
     player.pauseVideo();
 }
 
 function unpauseGame() {
-    document.body.removeChild(pauseScreen);
+    document.body.removeChild(pauseMenu);
     startGame();
 }
 

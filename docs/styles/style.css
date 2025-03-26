@@ -11,7 +11,7 @@
     z-index: -1;
 }
 
-#main-menu {
+#main-menu-screen {
     font-family: fantasy;
     padding: 16px;
     width: 300px;
@@ -19,14 +19,14 @@
     margin: auto;
 }
 
-.main-menu-title {
+.main-menu-screen-title {
     text-align: center;
     font-size: 40;
     color: pink;
     text-shadow: green 2px 2px;
 }
 
-.main-menu-button {
+.main-menu-screen-button {
     margin: 8px;
     padding: 8px;
     background-color: pink;
@@ -35,34 +35,34 @@
     /* font-weight: bold; */
 }
 
-.main-menu-button:hover, .main-menu-button:active {
+.main-menu-screen-button:hover, .main-menu-screen-button:active {
     position: relative;
     top: 2px;
     right: -2px;
     box-shadow: 1px 1px green;
 }
 
-.main-menu-button:hover {
+.main-menu-screen-button:hover {
     background-color: pink;
     cursor: pointer;
 }
 
-.main-menu-button:active {
+.main-menu-screen-button:active {
     background-color: white;
 }
 
-#main-menu-song-list {
+#main-menu-screen-song-list {
     margin-top: 20px;
     height: 300px;
     overflow: auto;
     scrollbar-color: black pink;
 }
 
-.main-menu-button:first-child {
+.main-menu-screen-button:first-child {
     margin-top: 0px;
 }
 
-.main-menu-button:last-child {
+.main-menu-screen-button:last-child {
     margin-bottom: 0px;
 }
 
@@ -101,5 +101,6 @@
 }
 
 .pause-menu-button:hover {
+    background-color: pink;
     cursor: pointer;
 }
