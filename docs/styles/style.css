@@ -15,7 +15,7 @@
     font-family: fantasy;
     padding: 16px;
     width: 300px;
-    background-color: black;   
+    background-color: black;
     margin: auto;
 }
 
@@ -64,4 +64,42 @@
 
 .main-menu-button:last-child {
     margin-bottom: 0px;
+}
+
+#pause-menu {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    font-family: fantasy;
+    padding: 30px;
+    width: 320px;
+    height: 130px;
+    background-color: black;
+    margin: 100px auto auto auto
+}
+
+.pause-menu-title {
+    text-align: center;
+    font-size: 30;
+    color: pink;
+}
+
+.pause-menu-button-list {
+    text-align: center;
+}
+
+.pause-menu-button {
+    display: inline-block;
+    margin: 8px;
+    padding: 16px;
+    font-size: 30;
+    width: 100px;
+    background-color: white;
+    text-align: center;
+}
+
+.pause-menu-button:hover {
+    cursor: pointer;
 }

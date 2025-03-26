@@ -18,6 +18,7 @@ var songs;
 var menuScreen;
 var menuBackground;
 var gameScreen;
+var pauseScreen;
 
 var prevTime;
 var isPause = false;
@@ -26,9 +27,13 @@ var intervalId;
 function onLoad() {
     menuScreen = document.getElementById("main-menu");
     gameScreen = document.getElementById("game-screen");
+    pauseScreen = document.getElementById("pause-menu");
     
     loadSongsIntoMenu();
+    addEventListenersToPauseMenu();
+
     document.body.removeChild(menuScreen);
+    document.body.removeChild(pauseScreen);
 
     showMenu();
 }
@@ -106,6 +111,13 @@ function loadSongsIntoMenu() {
     }
 }
 
+function addEventListenersToPauseMenu() {
+    var quitGameButton = document.getElementById("quit-game-button");
+    var continueGameButton = document.getElementById("continue-game-button");
+    //quitGameButton.addEventListener("click", () => { showGame(s); });
+    continueGameButton.addEventListener("click", () => { togglePause(); });
+}
+
 function loadGravityFalls() {
     // const centerX = canvas.width / 2;
     // const songVelocity = canvas.height / canvasVerticalPassTimeMs;
@@ -148,16 +160,29 @@ function loadGravityFalls() {
 
 function handlePauseButton(keyCode) {
     if (keyCode === "Escape") {
-        isPause = !isPause;
-        if (isPause)
-        {
-            clearInterval(intervalId);
-            player.pauseVideo();
-        }
-        else {
-            startGame();
-        }
+        togglePause();
     }
+}
+
+function togglePause() {
+    isPause = !isPause;
+    if (isPause) {
+        pauseGame();
+    }
+    else {
+        unpauseGame();
+    }
+}
+
+function pauseGame() {
+    document.body.appendChild(pauseScreen);
+    clearInterval(intervalId);
+    player.pauseVideo();
+}
+
+function unpauseGame() {
+    document.body.removeChild(pauseScreen);
+    startGame();
 }
 
 function handleGameplayButtons(keyCode) {
