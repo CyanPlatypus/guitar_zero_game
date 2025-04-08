@@ -39,6 +39,17 @@ function onLoad() {
 }
 
 function showMenu() {
+    // START Returning back to menu
+    // * Need to remove key listeners
+    // * Need to clear game state so that when we start again we don't see anything from prev game
+    // if (isPause) {
+    //     document.body.removeChild(pauseMenu);
+    //     //player.destroy();
+    // }
+
+    //isPause = false;
+    // END Returning back to menu
+
     document.body.removeChild(gameScreen);
     document.body.appendChild(mainMenuScreen);
 
@@ -114,8 +125,23 @@ function loadSongsIntoMenu() {
 function addEventListenersToPauseMenu() {
     var quitGameButton = document.getElementById("quit-game-button");
     var continueGameButton = document.getElementById("continue-game-button");
-    //quitGameButton.addEventListener("click", () => { showGame(s); });
+    quitGameButton.addEventListener("click", () => { exitGame(); });
     continueGameButton.addEventListener("click", () => { togglePause(); });
+}
+
+function exitGame() {
+    if (isPause) {
+        document.body.removeChild(pauseMenu);
+    }
+    else {
+        clearInterval(intervalId);
+    }
+
+    isPause = false;
+    player.destroy();
+    window.removeEventListener("keydown", onKeyDown);
+    clearCanvas();
+    showMenu();
 }
 
 function loadGravityFalls() {
@@ -126,7 +152,7 @@ function loadGravityFalls() {
     const centerX = canvasWidth / 2;
     const songVelocity = canvasHeight / canvasVerticalPassTimeMs;
     const noteHeight = 2 * accuracyDeltaMs * songVelocity;
-    
+
     const line1x = centerX - (lineWidth * 2 + separatorWidth * 1.5) + (lineWidth / 2);
     const line2x = centerX - (lineWidth + separatorWidth * 0.5) + (lineWidth / 2);
     const line3x = centerX + separatorWidth * 0.5 + (lineWidth / 2);
@@ -203,7 +229,7 @@ function handleGameplayButtons(keyCode) {
 function onKeyDown(event) {
     if (event.defaultPrevented) {
         // Do nothing if event already handled
-        return; 
+        return;
     }
     if (event.repeat) {
         // Given key is being held down such that it is automatically repeating
