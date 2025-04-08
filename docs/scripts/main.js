@@ -1,11 +1,8 @@
 window.addEventListener("load", onLoad);
 
-const canvasVerticalPassTimeMs = 2000;
 const crossLineY = 400;
 const lineWidth = 80;
-const noteWidth = 70;
 const separatorWidth = 1;
-const accuracyDeltaMs = 120;
 
 var canvas;
 var context;
@@ -39,17 +36,6 @@ function onLoad() {
 }
 
 function showMenu() {
-    // START Returning back to menu
-    // * Need to remove key listeners
-    // * Need to clear game state so that when we start again we don't see anything from prev game
-    // if (isPause) {
-    //     document.body.removeChild(pauseMenu);
-    //     //player.destroy();
-    // }
-
-    //isPause = false;
-    // END Returning back to menu
-
     document.body.removeChild(gameScreen);
     document.body.appendChild(mainMenuScreen);
 
@@ -105,7 +91,6 @@ function loadSongsIntoMenu() {
         [4000, 5000, 6000]);
 
     songs = [
-        //loadGravityFalls()
         gravityFalls,
         lastChristmas
     ]
@@ -144,46 +129,6 @@ function exitGame() {
     showMenu();
 }
 
-function loadGravityFalls() {
-    // const centerX = canvas.width / 2;
-    // const songVelocity = canvas.height / canvasVerticalPassTimeMs;
-    const canvasWidth = 1000;
-    const canvasHeight = 500;
-    const centerX = canvasWidth / 2;
-    const songVelocity = canvasHeight / canvasVerticalPassTimeMs;
-    const noteHeight = 2 * accuracyDeltaMs * songVelocity;
-
-    const line1x = centerX - (lineWidth * 2 + separatorWidth * 1.5) + (lineWidth / 2);
-    const line2x = centerX - (lineWidth + separatorWidth * 0.5) + (lineWidth / 2);
-    const line3x = centerX + separatorWidth * 0.5 + (lineWidth / 2);
-    const line4x = centerX + lineWidth + separatorWidth * 1.5 + (lineWidth / 2);
-
-    return new Song(
-        "Gravity Falls Theme",
-        "-h5bYX5L-0s",
-        songVelocity,
-        [
-            new Note(2000, new NoteView(line1x, 0, noteWidth, noteHeight), crossLineY, songVelocity),
-            new Note(3000, new NoteView(line1x, 0, noteWidth, noteHeight), crossLineY, songVelocity),
-            new Note(5000, new NoteView(line1x, 0, noteWidth, noteHeight), crossLineY, songVelocity)
-        ],
-        [
-            new Note(1000, new NoteView(line2x, 0, noteWidth, noteHeight), crossLineY, songVelocity),
-            new Note(2000, new NoteView(line2x, 0, noteWidth, noteHeight), crossLineY, songVelocity),
-            new Note(6000, new NoteView(line2x, 0, noteWidth, noteHeight), crossLineY, songVelocity)
-        ],
-        [
-            new Note(3000, new NoteView(line3x, 0, noteWidth, noteHeight), crossLineY, songVelocity),
-            new Note(4000, new NoteView(line3x, 0, noteWidth, noteHeight), crossLineY, songVelocity),
-            new Note(5000, new NoteView(line3x, 0, noteWidth, noteHeight), crossLineY, songVelocity)
-        ],
-        [
-            new Note(4000, new NoteView(line4x, 0, noteWidth, noteHeight), crossLineY, songVelocity),
-            new Note(6000, new NoteView(line4x, 0, noteWidth, noteHeight), crossLineY, songVelocity)
-        ]
-    );
-}
-
 function handlePauseButton(keyCode) {
     if (keyCode === "Escape") {
         togglePause();
@@ -216,13 +161,13 @@ function handleGameplayButtons(keyCode) {
         return;
 
     if (keyCode === "KeyD") {
-        currentSong.checkHit(accuracyDeltaMs, "Lane1");
+        currentSong.checkHit(GameplaySettings.accuracyDeltaMs, "Lane1");
     } else if (keyCode === "KeyF") {
-        currentSong.checkHit(accuracyDeltaMs, "Lane2");
+        currentSong.checkHit(GameplaySettings.accuracyDeltaMs, "Lane2");
     } else if (keyCode === "KeyJ") {
-        currentSong.checkHit(accuracyDeltaMs, "Lane3");
+        currentSong.checkHit(GameplaySettings.accuracyDeltaMs, "Lane3");
     } else if (keyCode === "KeyK") {
-        currentSong.checkHit(accuracyDeltaMs, "Lane4");
+        currentSong.checkHit(GameplaySettings.accuracyDeltaMs, "Lane4");
     }
 }
 
@@ -333,8 +278,8 @@ function drawText(text) {
 }
 
 function drawDebug() {
-    const windowStartLineY = crossLineY - accuracyDeltaMs * currentSong.songVelocity;
-    const windowEndLineY = crossLineY + accuracyDeltaMs * currentSong.songVelocity;
+    const windowStartLineY = crossLineY - GameplaySettings.accuracyDeltaMs * currentSong.songVelocity;
+    const windowEndLineY = crossLineY + GameplaySettings.accuracyDeltaMs * currentSong.songVelocity;
     drawLine(0, windowStartLineY , 1000, windowStartLineY, "grey");
     drawLine(0, windowEndLineY, 1000, windowEndLineY, "grey");
 }
